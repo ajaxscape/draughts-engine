@@ -1,0 +1,37 @@
+{
+  "name": "draughts-engine",
+  "version": "0.1.0",
+  "description": "REST powered draughts game engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src",
+    "lint": "node node_modules/.bin/standard --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajaxscape/draughts-engine.git"
+  },
+  "standard": {
+    "env": "mocha"
+  },
+  "keywords": [
+    "Draughts",
+    "REST",
+    "game",
+    "engine"
+  ],
+  "author": "Ben Surgison",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajaxscape/draughts-engine/issues"
+  },
+  "homepage": "https://github.com/ajaxscape/draughts-engine#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "standard": "^10.0.3"
+  }
+}
