@@ -155,5 +155,6 @@ module.exports = class Game {
 
     // Switch to the next player
     this.currentPlayer = this.currentPlayer === WHITE ? BLACK : WHITE
+    return this
   }
 }
