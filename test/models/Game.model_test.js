@@ -1,16 +1,31 @@
 const Game = require('../../src/models/Game.model')
 const {expect} = require('chai')
 
-describe("Game", function() {
-  describe("constructor", function () {
-    it("should have a default state", function () {
-      var game = new Game()
-      expect(game.state).to.equal({})
-    })
+const WHITE = 'w'
+const BLACK = 'b'
+const defaultPlayer = WHITE
+const defaultState = [
+  ' w w w w',
+  'w w w w ',
+  ' w w w w',
+  '# # # # ',
+  ' # # # #',
+  'b b b b ',
+  ' b b b b',
+  'b b b b '
+].map((row) => row.split(''))
 
-    it("should set game's name if provided", function () {
-      var game = new Game("Kate")
-      expect(game.name).to.equal("Kate")
+describe('Game', function() {
+  let game
+  beforeEach(function () {
+    game = new Game()
+    player = defaultPlayer
+  })
+
+  describe('constructor', function () {
+    it('should have a default state', function () {
+      expect(game.state).to.deep.have.same.members(defaultState)
+      expect(game.currentPlayer).to.equal(defaultPlayer)
     })
   })
 })
