@@ -25,7 +25,7 @@ describe('Game', function() {
   }
 
   beforeEach(function () {
-    cols = 'abcdefgh'
+    const cols = 'abcdefgh'
     fakeGame = {
       state: defaultState.map((row) => row.map((col) => col)),
       currentPlayer: defaultPlayer,
