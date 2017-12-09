@@ -45,17 +45,12 @@ module.exports = class Game {
   }
 
   static _isValid (col, row) {
-    if (
-      (col % 2 && row % 2) ||
+    return !((col % 2 && row % 2) ||
       (!(col % 2) && !(row % 2)) ||
       col < 0 ||
       col > 7 ||
       row < 0 ||
-      row > 7) {
-      return false
-    } else {
-      return true
-    }
+      row > 7)
   }
 
   static _getPos (alpha) {

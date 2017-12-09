@@ -10,7 +10,7 @@ router.get('/reset', (req, res) => {
 })
 
 router.get('/render', (req, res) => {
-  res.send(req.game)
+  res.send(req.game.render())
 })
 
 router.get('/move/:start/:end', (req, res) => {
