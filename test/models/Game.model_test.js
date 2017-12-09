@@ -35,6 +35,14 @@ describe('Game', function () {
     expect(game.state.toString().toLowerCase().indexOf(player)).to.equal(-1)
   }
 
+  const expectInvalidMove = (move, game, fakeGame) => {
+    console.log(`MOVING: (${move.split(',').join(') to (')})`)
+    const [source, target] = move.split(',')
+    expect(() => game.move(source, target)).to.throw(Error, `Invalid move (${source}, ${target})`)
+    expectGamesToMatch(game, fakeGame)
+    console.log(game.render())
+  }
+
   const expectValidMove = (move, game, fakeGame, isCrowned) => {
     console.log(`MOVING: (${move.split(',').join(') to (')})`)
     const [source, jumped, target] = move.split(',')
@@ -68,12 +76,12 @@ describe('Game', function () {
     game = new Game()
   })
 
-  describe('constructor', function () {
+  describe('state', function () {
     it('should have a default state', function () {
       expectGamesToMatch(game, fakeGame)
     })
 
-    it('should make a valid standard move', function () {
+    it('should successfully complete a game', function () {
       expectValidMove('f3,e4', game, fakeGame)
       expectValidMove('g6,f5', game, fakeGame)
       expectValidMove('e4,f5,g6', game, fakeGame)
@@ -114,11 +122,10 @@ describe('Game', function () {
       expectLoserToBe(game, BLACK)
     })
 
-    it('should make an invalid standard move', function () {
-      const source = 'f3'
-      const target = 'f3'
-      expect(() => game.move(source, target)).to.throw(Error, `Invalid move (${source}, ${target})`)
-      expectGamesToMatch(game, fakeGame)
+    it('should handle invalid moves', function () {
+      expectInvalidMove('f3,f3', game, fakeGame)
+      expectInvalidMove('h3,i3', game, fakeGame)
+      expectInvalidMove('f3,g0', game, fakeGame)
     })
 
     it('should make an invalid standard move', function () {

@@ -14,11 +14,15 @@ const initState = () => [
 ].map((row) => row.split(''))
 
 module.exports = class Game {
-  constructor (player1, player2) {
+  constructor (player1, player2, state, currentPlayer) {
     this.player1 = player1
     this.player2 = player2
-    this.state = initState()
-    this.currentPlayer = WHITE
+    if (state) {
+      this.state = state.map((row) => row.map((col) => col))
+    } else {
+      this.state = initState()
+    }
+    this.currentPlayer = currentPlayer || WHITE
   }
 
   render (err) {
