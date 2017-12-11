@@ -4,7 +4,6 @@ const {expect} = require('chai')
 const WHITE = 'w'
 const BLACK = 'b'
 const EMPTY = '#'
-const CROWNED = true
 const defaultPlayer = WHITE
 const defaultState = [
   ' w w w w',
@@ -48,19 +47,15 @@ describe('Game', function () {
     render(game)
   }
 
-  const expectValidMove = (move, game, fakeGame, isCrowned) => {
+  const expectValidMove = (move, game, fakeGame) => {
     console.log(`MOVING: (${move.split(',').join(') to (')})`)
-    const [source, jumped, target] = move.split(',')
-    if (isCrowned) {
-      const [sourceCol, sourceRow] = getPos(source)
-      fakeGame.state[sourceRow][sourceCol] = fakeGame.state[sourceRow][sourceCol].toUpperCase()
-    }
-    if (target) {
-      const [jumpedCol, jumpedRow] = getPos(jumped)
-      fakeGame.state[jumpedRow][jumpedCol] = EMPTY
-    }
-    expectGamesToMatch(game.move(source, target || jumped), fakeGame.move(source, target || jumped))
+    let [source, target, ...rest] = move.split(',')
+    expectGamesToMatch(game.move(source, target), fakeGame.move(source, target))
     render(game)
+    if (rest.length) {
+      rest.unshift(target)
+      expectValidMove(rest.join(','), game, fakeGame)
+    }
   }
 
   beforeEach(function () {
@@ -71,9 +66,22 @@ describe('Game', function () {
         const {state, currentPlayer} = fakeGame
         const [sourceCol, sourceRow] = getPos(source)
         const [targetCol, targetRow] = getPos(target)
-        const sourceCell = state[sourceRow][sourceCol]
+        let sourceCell = state[sourceRow][sourceCol]
         state[sourceRow][sourceCol] = EMPTY
+        switch (sourceCell) {
+          case WHITE:
+            sourceCell = targetRow === 7 ? sourceCell.toUpperCase() : sourceCell
+            break
+          case BLACK:
+            sourceCell = targetRow === 0 ? sourceCell.toUpperCase() : sourceCell
+            break
+        }
         state[targetRow][targetCol] = sourceCell
+        if (Math.abs(targetCol - sourceCol) === 2) {
+          const jumpedCol = sourceCol + (targetCol - sourceCol) / 2
+          const jumpedRow = sourceRow + (targetRow - sourceRow) / 2
+          state[jumpedRow][jumpedCol] = EMPTY
+        }
         fakeGame.currentPlayer = currentPlayer === WHITE ? BLACK : WHITE
         return fakeGame
       }
@@ -90,41 +98,43 @@ describe('Game', function () {
       render(game)
       expectValidMove('f3,e4', game, fakeGame)
       expectValidMove('g6,f5', game, fakeGame)
-      expectValidMove('e4,f5,g6', game, fakeGame)
-      expectValidMove('h7,g6,f5', game, fakeGame)
+      expectValidMove('e4,g6', game, fakeGame)
+      expectValidMove('h7,f5', game, fakeGame)
       expectValidMove('b3,c4', game, fakeGame)
       expectValidMove('f5,e4', game, fakeGame)
-      expectValidMove('d3,e4,f5', game, fakeGame)
-      expectValidMove('e6,f5,g4', game, fakeGame)
-      expectValidMove('h3,g4,f5', game, fakeGame)
+      expectValidMove('d3,f5', game, fakeGame)
+      expectValidMove('e6,g4', game, fakeGame)
+      expectValidMove('h3,f5', game, fakeGame)
       expectValidMove('f7,g6', game, fakeGame)
-      expectValidMove('f5,g6,h7', game, fakeGame)
+      expectValidMove('f5,h7', game, fakeGame)
       expectValidMove('g8,f7', game, fakeGame)
-      expectValidMove('h7,g8', game, fakeGame, CROWNED)
+      expectValidMove('h7,g8', game, fakeGame)
       expectValidMove('a6,b5', game, fakeGame)
-      expectValidMove('g8,f7,e6', game, fakeGame)
-      expectValidMove('b5,c4,d3', game, fakeGame)
-      expectValidMove('e2,d3,c4', game, fakeGame)
+      expectValidMove('g8,e6', game, fakeGame)
+      expectValidMove('b5,d3', game, fakeGame)
+      expectValidMove('e2,c4', game, fakeGame)
       expectValidMove('c6,b5', game, fakeGame)
-      expectValidMove('c4,b5,a6', game, fakeGame)
+      expectValidMove('c4,a6', game, fakeGame)
       expectValidMove('b7,c6', game, fakeGame)
       expectValidMove('a6,b7', game, fakeGame)
       expectValidMove('c6,d5', game, fakeGame)
-      expectValidMove('e6,d5,c4', game, fakeGame)
+      expectValidMove('e6,c4', game, fakeGame)
       expectValidMove('d7,c6', game, fakeGame)
       expectValidMove('c4,b5', game, fakeGame)
       expectValidMove('c8,d7', game, fakeGame)
-      expectValidMove('b7,c8', game, fakeGame, CROWNED)
-      expectValidMove('c6,b5,a4', game, fakeGame)
-      expectValidMove('c8,d7,e6', game, fakeGame)
+      expectValidMove('b7,c8', game, fakeGame)
+      expectValidMove('c6,a4', game, fakeGame)
+      expectValidMove('c8,e6', game, fakeGame)
       expectValidMove('e8,d7', game, fakeGame)
-      expectValidMove('e6,d7,c8', game, fakeGame)
+      expectValidMove('e6,c8', game, fakeGame)
       expectValidMove('a8,b7', game, fakeGame)
-      expectValidMove('c8,b7,a6', game, fakeGame)
+      expectValidMove('g2,h3', game, fakeGame)
+      expectValidMove('b7,c6', game, fakeGame)
+      expectValidMove('h3,g4', game, fakeGame)
       expectValidMove('a4,b3', game, fakeGame)
-      expectValidMove('c2,d3', game, fakeGame)
-      expectValidMove('b3,c2', game, fakeGame)
-      expectValidMove('d1,c2,b3', game, fakeGame)
+      expectValidMove('g4,f5', game, fakeGame)
+      expectValidMove('c6,d5', game, fakeGame)
+      expectValidMove('a2,c4,e6', game, fakeGame)
       expectLoserToBe(game, BLACK)
     })
 

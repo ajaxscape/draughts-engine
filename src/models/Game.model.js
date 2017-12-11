@@ -63,7 +63,7 @@ module.exports = class Game {
     }
     const col = 'abcdefgh'.indexOf(alpha[0])
     const row = parseInt(alpha[1]) - 1
-    return {col, row}
+    return [col, row]
   }
 
   validTarget (col, row, colDiff, rowDiff) {
@@ -97,7 +97,7 @@ module.exports = class Game {
 
   getPossibleTargets (source) {
     const list = []
-    const {col, row} = Game._getPos(source)
+    const [col, row] = Game._getPos(source)
     if (!Game._isValid(col, row)) {
       return list
     }
@@ -114,8 +114,8 @@ module.exports = class Game {
   }
 
   move (source, target) {
-    const {col: sourceCol, row: sourceRow} = Game._getPos(source)
-    const {col: targetCol, row: targetRow} = Game._getPos(target)
+    const [sourceCol, sourceRow] = Game._getPos(source)
+    const [targetCol, targetRow] = Game._getPos(target)
     if (!Game._isValid(sourceCol, sourceRow) || !Game._isValid(targetCol, targetRow)) {
       throw new Error(`Invalid move (${source}, ${target})`)
     }
