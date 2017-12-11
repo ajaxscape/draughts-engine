@@ -4,7 +4,7 @@
   "description": "REST powered draughts game engine",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node node_modules/mocha/bin/_mocha --ui bdd --recursive test",
     "start": "node src",
     "lint": "node node_modules/.bin/standard --fix"
   },

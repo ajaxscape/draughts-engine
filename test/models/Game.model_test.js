@@ -21,6 +21,11 @@ describe('Game', function () {
   let fakeGame
   let game
 
+  const render = (game) => {
+    game.render().forEach((line) => console.info(line))
+    console.info()
+  }
+
   const getPos = (pos) => {
     const cols = 'abcdefgh'
     return [cols.indexOf(pos[0]), parseInt(pos[1]) - 1]
@@ -40,7 +45,7 @@ describe('Game', function () {
     const [source, target] = move.split(',')
     expect(() => game.move(source, target)).to.throw(Error, `Invalid move (${source}, ${target})`)
     expectGamesToMatch(game, fakeGame)
-    console.log(game.render())
+    render(game)
   }
 
   const expectValidMove = (move, game, fakeGame, isCrowned) => {
@@ -55,7 +60,7 @@ describe('Game', function () {
       fakeGame.state[jumpedRow][jumpedCol] = EMPTY
     }
     expectGamesToMatch(game.move(source, target || jumped), fakeGame.move(source, target || jumped))
-    console.log(game.render())
+    render(game)
   }
 
   beforeEach(function () {
@@ -81,7 +86,8 @@ describe('Game', function () {
       expectGamesToMatch(game, fakeGame)
     })
 
-    it('should successfully complete a game', function () {
+    it('should successfully complete a full game', function () {
+      render(game)
       expectValidMove('f3,e4', game, fakeGame)
       expectValidMove('g6,f5', game, fakeGame)
       expectValidMove('e4,f5,g6', game, fakeGame)
