@@ -51,13 +51,14 @@ describe('Game', function () {
     console.log(`MOVING: (${move.split(',').join(') to (')})`)
     let [source, target, ...rest] = move.split(',')
     render(game)
+    game.move(source, target)
+    fakeGame.move(source, target)
     if (rest.length) {
-      game.move(source, target)
-      fakeGame.move(source, target)
       rest.unshift(target)
       expectValidMove(rest.join(','), game, fakeGame)
     } else {
-      expectGamesToMatch(game.move(source, target), fakeGame.move(source, target))
+      fakeGame.currentPlayer = fakeGame.currentPlayer === WHITE ? BLACK : WHITE
+      expectGamesToMatch(game, fakeGame)
     }
   }
 
@@ -66,7 +67,7 @@ describe('Game', function () {
       state: defaultState.map((row) => row.map((col) => col)),
       currentPlayer: defaultPlayer,
       move: (source, target) => {
-        const {state, currentPlayer} = fakeGame
+        const {state} = fakeGame
         const [sourceCol, sourceRow] = getPos(source)
         const [targetCol, targetRow] = getPos(target)
         let sourceCell = state[sourceRow][sourceCol]
@@ -85,7 +86,6 @@ describe('Game', function () {
           const jumpedRow = sourceRow + (targetRow - sourceRow) / 2
           state[jumpedRow][jumpedCol] = EMPTY
         }
-        fakeGame.currentPlayer = currentPlayer === WHITE ? BLACK : WHITE
         return fakeGame
       }
     }
