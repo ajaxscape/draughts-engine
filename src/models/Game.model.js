@@ -145,6 +145,7 @@ module.exports = class Game {
     const {jumpedCol, jumpedRow} = validMove
     if (jumpedCol && jumpedRow) {
       this.setCell(jumpedCol, jumpedRow, EMPTY)
+      this.jumping = true
     }
 
     // Make a draught a king (uppercase) if eligible
@@ -155,7 +156,9 @@ module.exports = class Game {
       this.setCell(targetCol, targetRow, 'B')
     }
 
-    this.jumping = !!this.getPossibleTargets(target).length
+    if (this.jumping) {
+      this.jumping = !!this.getPossibleTargets(target).length
+    }
 
     // Switch to the next player if there are no possible targets
     if (!this.jumping) {

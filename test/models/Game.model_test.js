@@ -50,11 +50,14 @@ describe('Game', function () {
   const expectValidMove = (move, game, fakeGame) => {
     console.log(`MOVING: (${move.split(',').join(') to (')})`)
     let [source, target, ...rest] = move.split(',')
-    expectGamesToMatch(game.move(source, target), fakeGame.move(source, target))
     render(game)
     if (rest.length) {
+      game.move(source, target)
+      fakeGame.move(source, target)
       rest.unshift(target)
       expectValidMove(rest.join(','), game, fakeGame)
+    } else {
+      expectGamesToMatch(game.move(source, target), fakeGame.move(source, target))
     }
   }
 
