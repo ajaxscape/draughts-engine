@@ -119,6 +119,9 @@ module.exports = class Game {
   move (source, target) {
     const [sourceCol, sourceRow] = Game._getPos(source)
     const [targetCol, targetRow] = Game._getPos(target)
+    if (this.jumping && this.jumping !== source) {
+      throw new Error(`Invalid move (${source}, ${target})`)
+    }
     if (!Game._isValid(sourceCol, sourceRow) || !Game._isValid(targetCol, targetRow)) {
       throw new Error(`Invalid move (${source}, ${target})`)
     }
@@ -145,7 +148,7 @@ module.exports = class Game {
     const {jumpedCol, jumpedRow} = validMove
     if (jumpedCol && jumpedRow) {
       this.setCell(jumpedCol, jumpedRow, EMPTY)
-      this.jumping = true
+      this.jumping = target
     }
 
     // Make a draught a king (uppercase) if eligible
@@ -157,7 +160,9 @@ module.exports = class Game {
     }
 
     if (this.jumping) {
-      this.jumping = !!this.getPossibleTargets(target).length
+      if (!this.getPossibleTargets(target).length) {
+        this.jumping = false
+      }
     }
 
     // Switch to the next player if there are no possible targets
