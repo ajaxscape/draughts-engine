@@ -66,7 +66,7 @@ module.exports = class Game {
     return [col, row]
   }
 
-  validTarget (col, row, colDiff, rowDiff, jumping) {
+  validTarget (col, row, colDiff, rowDiff) {
     const jumpedCol = col + colDiff
     const jumpedRow = row + rowDiff
     const jumpTargetCol = col + colDiff * 2
@@ -78,7 +78,7 @@ module.exports = class Game {
 
     const jumpedCell = this.getCell(jumpedCol, jumpedRow)
     if (jumpedCell === EMPTY) {
-      if (jumping) {
+      if (this.jumping) {
         return // Must continue to jump
       }
       return {col: jumpedCol, row: jumpedRow}
@@ -98,7 +98,7 @@ module.exports = class Game {
     }
   }
 
-  getPossibleTargets (source, jumping) {
+  getPossibleTargets (source) {
     const list = []
     const [col, row] = Game._getPos(source)
     if (!Game._isValid(col, row)) {
@@ -106,12 +106,12 @@ module.exports = class Game {
     }
     const sourceCell = this.getCell(col, row)
     if (sourceCell !== WHITE) {
-      list.push(this.validTarget(col, row, -1, -1, jumping))
-      list.push(this.validTarget(col, row, 1, -1, jumping))
+      list.push(this.validTarget(col, row, -1, -1))
+      list.push(this.validTarget(col, row, 1, -1))
     }
     if (sourceCell !== BLACK) {
-      list.push(this.validTarget(col, row, -1, 1, jumping))
-      list.push(this.validTarget(col, row, 1, 1, jumping))
+      list.push(this.validTarget(col, row, -1, 1))
+      list.push(this.validTarget(col, row, 1, 1))
     }
     return list.filter((target) => target)
   }
@@ -155,8 +155,12 @@ module.exports = class Game {
       this.setCell(targetCol, targetRow, 'B')
     }
 
-    // Switch to the next player
-    this.currentPlayer = this.currentPlayer === WHITE ? BLACK : WHITE
+    this.jumping = !!this.getPossibleTargets(target).length
+
+    // Switch to the next player if there are no possible targets
+    if (!this.jumping) {
+      this.currentPlayer = this.currentPlayer === WHITE ? BLACK : WHITE
+    }
     return this
   }
 }
