@@ -14,9 +14,7 @@ const initState = () => [
 ].map((row) => row.split(''))
 
 module.exports = class Game {
-  constructor (player1, player2, state, currentPlayer) {
-    this.player1 = player1
-    this.player2 = player2
+  constructor (state, currentPlayer) {
     if (state) {
       this.state = state.map((row) => row.map((col) => col))
     } else {
