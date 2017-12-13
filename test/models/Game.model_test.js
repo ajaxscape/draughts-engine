@@ -37,6 +37,7 @@ describe('Game', function () {
 
   const expectLoserToBe = (game, player) => {
     expect(game.state.toString().toLowerCase().indexOf(player)).to.equal(-1)
+    render(game)
   }
 
   const expectInvalidMove = (move, game, fakeGame) => {
