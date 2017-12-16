@@ -1,0 +1,29 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+out
+
+# Test
+test
+coverage
+
+# Git
+.gitignore
+
+# Travis
+.travis.yml
+
+# Scripts
+scripts
+
+# Node Modules
+node_modules
+.npmignore
+.bithoundrc
+
+npm-debug.log
+
+esdoc
